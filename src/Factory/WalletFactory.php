@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Factory;
 
 use App\Entity\Wallet;
@@ -29,21 +31,11 @@ use Zenstruck\Foundry\RepositoryProxy;
  */
 final class WalletFactory extends ModelFactory
 {
-    /**
-     * @see https://symfony.com/bundles/ZenstruckFoundryBundle/current/index.html#factories-as-services
-     *
-     * @todo inject services if required
-     */
     public function __construct()
     {
         parent::__construct();
     }
 
-    /**
-     * @see https://symfony.com/bundles/ZenstruckFoundryBundle/current/index.html#model-factories
-     *
-     * @todo add your default values here
-     */
     protected function getDefaults(): array
     {
         $currency = CurrencyFactory::findOrCreate([
@@ -60,13 +52,10 @@ final class WalletFactory extends ModelFactory
         ];
     }
 
-    /**
-     * @see https://symfony.com/bundles/ZenstruckFoundryBundle/current/index.html#initialization
-     */
     protected function initialize(): self
     {
         return $this
-            // ->afterInstantiate(function(Wallet $wallet): void {})
+             ->afterInstantiate(function(Wallet $wallet): void {})
         ;
     }
 
