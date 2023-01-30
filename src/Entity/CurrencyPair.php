@@ -32,6 +32,14 @@ class CurrencyPair
     #[ORM\OneToMany(mappedBy: 'currencyPair', targetEntity: Offer::class)]
     private Collection $offers;
 
+    #[ORM\ManyToOne(inversedBy: 'currencyPairs')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Currency $firstCurrency = null;
+
+    #[ORM\ManyToOne(inversedBy: 'currencyPairs')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Currency $secondCurrency = null;
+
     public function __construct()
     {
         $this->offers = new ArrayCollection();
@@ -104,6 +112,30 @@ class CurrencyPair
                 $offer->setCurrencyPair(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getFirstCurrency(): ?Currency
+    {
+        return $this->firstCurrency;
+    }
+
+    public function setFirstCurrency(?Currency $firstCurrency): self
+    {
+        $this->firstCurrency = $firstCurrency;
+
+        return $this;
+    }
+
+    public function getSecondCurrency(): ?Currency
+    {
+        return $this->secondCurrency;
+    }
+
+    public function setSecondCurrency(?Currency $secondCurrency): self
+    {
+        $this->secondCurrency = $secondCurrency;
 
         return $this;
     }

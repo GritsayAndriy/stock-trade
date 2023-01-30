@@ -1,0 +1,25 @@
+{% extends 'profile-base.html.twig' %}
+
+{% block body %}
+    <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+        <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+            <h1 class="h2"></h1>
+        </div>
+        <h2>Make offer</h2>
+        <form method="POST" action="{{ path('app_offer') }}">
+            <select class="form-select" name="currency_pair" aria-label="Currency pair">
+                <option selected>Open this select menu</option>
+                {%for currencyPair in currencyPairs %}
+                    <option value="{{ currencyPair.id }}">{{ currencyPair.name }}</option>
+                {% endfor %}
+            </select>
+            <select class="form-select" name="type" aria-label="Buy/Sell">
+                <option value="buy">Buy</option>
+                <option value="sell">Sell</option>
+            </select>
+            <input type="text" name="price">
+            <input type="number" name="amount">
+            <input type="submit" value="Make offer">
+        </form>
+    </main>
+{% endblock %}

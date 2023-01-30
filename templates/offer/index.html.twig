@@ -1,0 +1,101 @@
+{% extends 'profile-base.html.twig' %}
+
+{# {% block title %}Hello OfferController!{% endblock %} #}
+
+{% block body %}
+    <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+        <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+            <h1 class="h2">Offers</h1>
+        </div>
+        <ul class="nav nav-tabs" role="tablist">
+            <li class="nav-item" role="presentation">
+                <button class="nav-link active" id="my-offer-tab" data-bs-toggle="tab" data-bs-target="#my-offer-tab-pane"
+                        type="button" role="tab" aria-controls="my-offer-tab-pane" aria-selected="true">My offer</button>
+            </li>
+            <li class="nav-item">
+                <button class="nav-link" id="other-offer-tab" data-bs-toggle="tab" data-bs-target="#other-offer-tab-pane"
+                        type="button" role="tab" aria-controls="other-offer-tab-pane" aria-selected="false">Other offer</button>
+            </li>
+        </ul>
+        <div class="tab-content">
+            <div class="tab-pane fade show active" id="my-offer-tab-pane" role="tabpanel" aria-labelledby="my-offer-tab" tabindex="0">
+                <h3 class="my-2">My offers</h3>
+                <div>
+                    <a href="{{ path('app_create_offer') }}" class="btn btn-primary">Create offer</a>
+                    <table class="table">
+                        <thead>
+                        <tr>
+                            <th>Couple</th>
+                            <th>Type</th>
+                            <th>Price</th>
+                            <th>Amount</th>
+                            <th>Status</th>
+                            <th>Created At</th>
+                            <th>Actions</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for offer in offers %}
+                            <tr>
+                                <td>{{ offer.currencyPair.name }}</td>
+                                <td>{{ offer.type }}</td>
+                                <td>{{ offer.price }}</td>
+                                <td>{{ offer.amount }}</td>
+                                <td>{{ offer.status }}</td>
+                                <td>{{ offer.createdAt|date }}</td>
+                                <td>
+                                    {% if offer.status != constant('App\\Entity\\Offer::STATUS_CANCEL') %}
+                                        <a href="{{ path('app_cancel_offer', {'id': offer.id}) }}"
+                                           class="btn btn-danger">Cancel</a>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="tab-pane fade" id="other-offer-tab-pane" role="tabpanel" aria-labelledby="other-offer-tab" tabindex="0">
+                <h3 class="my-2">Others offers</h3>
+                <div>
+                    <table class="table">
+                        <thead>
+                        <tr>
+                            <th>Couple</th>
+                            <th>Type</th>
+                            <th>Price</th>
+                            <th>Amount</th>
+                            <th>Status</th>
+                            <th>Created At</th>
+                            <th>Actions</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for otherOffer in otherOffers %}
+                            <tr>
+                                <td>{{ otherOffer.currencyPair.name }}</td>
+                                <td>{{ otherOffer.type }}</td>
+                                <td>{{ otherOffer.price }}</td>
+                                <td>{{ otherOffer.amount }}</td>
+                                <td>{{ otherOffer.status }}</td>
+                                <td>{{ otherOffer.createdAt|date }}</td>
+                                <td>
+                                    {% if otherOffer.status != constant('App\\Entity\\Offer::STATUS_CANCEL') %}
+                                        <a href="{{ path('app_buy_offer', {'id': otherOffer.id}) }}"
+                                           class="btn btn-success">Buy</a>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div id="menu2" class="tab-pane fade">
+                <h3>Menu 2</h3>
+                <p>Some content in menu 2.</p>
+            </div>
+        </div>
+
+    </main>
+{% endblock %}
