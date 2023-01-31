@@ -46,7 +46,8 @@ class AppFixtures extends Fixture implements DependentFixtureInterface
     {
         return [
             CurrencyFixtures::class,
-            CurrencyPairFixtures::class
+            CurrencyPairFixtures::class,
+            AdminUserFixtures::class
         ];
     }
 }
