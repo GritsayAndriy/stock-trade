@@ -30,10 +30,14 @@ class Currency
     #[ORM\OneToMany(mappedBy: 'currency', targetEntity: Offer::class)]
     private Collection $offers;
 
+    #[ORM\OneToMany(mappedBy: 'firstCurrency', targetEntity: CurrencyPair::class)]
+    private Collection $currencyPairs;
+
     public function __construct()
     {
         $this->wallets = new ArrayCollection();
         $this->offers = new ArrayCollection();
+        $this->currencyPairs = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -119,6 +123,36 @@ class Currency
             // set the owning side to null (unless already changed)
             if ($offer->getCurrency() === $this) {
                 $offer->setCurrency(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, CurrencyPair>
+     */
+    public function getCurrencyPairs(): Collection
+    {
+        return $this->currencyPairs;
+    }
+
+    public function addCurrencyPair(CurrencyPair $currencyPair): self
+    {
+        if (!$this->currencyPairs->contains($currencyPair)) {
+            $this->currencyPairs->add($currencyPair);
+            $currencyPair->setFirstCurrency($this);
+        }
+
+        return $this;
+    }
+
+    public function removeCurrencyPair(CurrencyPair $currencyPair): self
+    {
+        if ($this->currencyPairs->removeElement($currencyPair)) {
+            // set the owning side to null (unless already changed)
+            if ($currencyPair->getFirstCurrency() === $this) {
+                $currencyPair->setFirstCurrency(null);
             }
         }
 

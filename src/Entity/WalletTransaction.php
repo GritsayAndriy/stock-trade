@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace App\Entity;
 
 use App\Repository\WalletTransactionRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -12,6 +14,13 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\Table(name: '`wallet_transactions`')]
 class WalletTransaction
 {
+    const STATUS_PENDING = 'pending';
+    const STATUS_CANCELED = 'canceled';
+    const STATUS_APPROVED = 'approved';
+    const STATUS_RESERVED = 'reserved';
+
+    const TYPE_RESERVE = 'reserve';
+
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
@@ -35,6 +44,17 @@ class WalletTransaction
     #[ORM\ManyToOne(inversedBy: 'walletTransactions')]
     #[ORM\JoinColumn(nullable: false)]
     private ?Wallet $wallet = null;
+
+    #[ORM\OneToMany(mappedBy: 'walletTransaction', targetEntity: Offer::class)]
+    private Collection $offers;
+
+    public function __construct()
+    {
+        $this->createdAt = new \DateTimeImmutable();
+        $this->updatedAt = new \DateTimeImmutable();
+        $this->offers = new ArrayCollection();
+
+    }
 
     public function getId(): ?int
     {
@@ -109,6 +129,36 @@ class WalletTransaction
     public function setWallet(?Wallet $wallet): self
     {
         $this->wallet = $wallet;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Offer>
+     */
+    public function getOffers(): Collection
+    {
+        return $this->offers;
+    }
+
+    public function addOffer(Offer $offer): self
+    {
+        if (!$this->offers->contains($offer)) {
+            $this->offers->add($offer);
+            $offer->setWalletTransaction($this);
+        }
+
+        return $this;
+    }
+
+    public function removeOffer(Offer $offer): self
+    {
+        if ($this->offers->removeElement($offer)) {
+            // set the owning side to null (unless already changed)
+            if ($offer->getWalletTransaction() === $this) {
+                $offer->setWalletTransaction(null);
+            }
+        }
 
         return $this;
     }
