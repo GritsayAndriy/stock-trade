@@ -13,6 +13,36 @@
     <main class="form-signin w-100 m-auto">
         {{ form_start(registrationForm) }}
         <h1 class="h3 mb-3 fw-normal">Please sign up</h1>
+        {{ form_row(registrationForm.firstName, {
+            input_attr: {
+                class: 'form-control'
+            },
+            lable_attr: {
+                class: ' '
+            },
+            row_attr : {
+                class: 'form-floating'
+            },
+            attr : {
+                placeholder: ''
+            }
+        }) }}
+
+        {{ form_row(registrationForm.lastName, {
+            input_attr: {
+                class: 'form-control'
+            },
+            lable_attr: {
+                class: ' '
+            },
+            row_attr : {
+                class: 'form-floating'
+            },
+            attr : {
+                placeholder: ''
+            }
+        }) }}
+
         {{ form_row(registrationForm.email, {
             input_attr: {
                 class: 'form-control'

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Entity;
 
+use ApiPlatform\Metadata\ApiResource;
 use App\Repository\CurrencyPairRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -11,6 +12,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: CurrencyPairRepository::class)]
 #[ORM\Table(name: '`currency_pairs`')]
+#[ApiResource]
 class CurrencyPair
 {
     #[ORM\Id]
@@ -29,6 +31,14 @@ class CurrencyPair
 
     #[ORM\OneToMany(mappedBy: 'currencyPair', targetEntity: Offer::class)]
     private Collection $offers;
+
+    #[ORM\ManyToOne(inversedBy: 'currencyPairs')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Currency $firstCurrency = null;
+
+    #[ORM\ManyToOne(inversedBy: 'currencyPairs')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Currency $secondCurrency = null;
 
     public function __construct()
     {
@@ -102,6 +112,30 @@ class CurrencyPair
                 $offer->setCurrencyPair(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getFirstCurrency(): ?Currency
+    {
+        return $this->firstCurrency;
+    }
+
+    public function setFirstCurrency(?Currency $firstCurrency): self
+    {
+        $this->firstCurrency = $firstCurrency;
+
+        return $this;
+    }
+
+    public function getSecondCurrency(): ?Currency
+    {
+        return $this->secondCurrency;
+    }
+
+    public function setSecondCurrency(?Currency $secondCurrency): self
+    {
+        $this->secondCurrency = $secondCurrency;
 
         return $this;
     }

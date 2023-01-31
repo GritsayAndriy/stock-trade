@@ -14,6 +14,13 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\Table(name: '`offers`')]
 class Offer
 {
+    const STATUS_PENDING = 'pending';
+    const STATUS_CANCEL = 'cancel';
+    const STATUS_CLOSED = 'closed';
+
+    const TYPE_BUY = 'buy';
+    const TYPE_SELL = 'sell';
+
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
@@ -42,10 +49,6 @@ class Offer
 
     #[ORM\ManyToOne(inversedBy: 'offers')]
     #[ORM\JoinColumn(nullable: false)]
-    private ?Currency $currency = null;
-
-    #[ORM\ManyToOne(inversedBy: 'offers')]
-    #[ORM\JoinColumn(nullable: false)]
     private ?User $user = null;
 
     #[ORM\OneToMany(mappedBy: 'sellOffer', targetEntity: Deal::class)]
@@ -58,10 +61,17 @@ class Offer
     #[ORM\JoinColumn(nullable: false)]
     private ?CurrencyPair $currencyPair = null;
 
+    #[ORM\ManyToOne(inversedBy: 'offers')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?WalletTransaction $walletTransaction = null;
+
     public function __construct()
     {
         $this->sellDeals = new ArrayCollection();
         $this->buyDeals = new ArrayCollection();
+        $this->createdAt = new \DateTimeImmutable();
+        $this->updatedAt = new \DateTimeImmutable();
+        $this->status = self::STATUS_PENDING;
     }
 
     public function getId(): ?int
@@ -153,18 +163,6 @@ class Offer
         return $this;
     }
 
-    public function getCurrency(): ?Currency
-    {
-        return $this->currency;
-    }
-
-    public function setCurrency(?Currency $currency): self
-    {
-        $this->currency = $currency;
-
-        return $this;
-    }
-
     public function getUser(): ?User
     {
         return $this->user;
@@ -245,6 +243,18 @@ class Offer
     public function setCurrencyPair(?CurrencyPair $currencyPair): self
     {
         $this->currencyPair = $currencyPair;
+
+        return $this;
+    }
+
+    public function getWalletTransaction(): ?WalletTransaction
+    {
+        return $this->walletTransaction;
+    }
+
+    public function setWalletTransaction(?WalletTransaction $walletTransaction): self
+    {
+        $this->walletTransaction = $walletTransaction;
 
         return $this;
     }
